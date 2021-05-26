@@ -1,6 +1,6 @@
 """Python-Markdown extension catching the `![]()` semantics to allow... more.
 
-`pip install git+https://github.com/carnarez/pymdx-img` and refer to the brilliant
+`pip install git+https://github.com/carnarez/markdown-img` and refer to the brilliant
 [`Python` implementation](https://github.com/Python-Markdown/markdown).
 
 * **Sizing** is made available via the `?size=...*...` keyword in the alt text. Either
@@ -65,7 +65,8 @@ class ImgPreprocessor(Preprocessor):
         src : str
             The path to the image.
         cls : str
-            Name of the CSS class(es) to provide to the parent `<p>` element.
+            Name of the CSS class(es) to provide to the parent `<p>` element. Defaults
+            to `None`.
         w : str
             Width of the image. Defaults to `None`.
         h : str
@@ -147,7 +148,7 @@ class ImgExtension(Extension):
 
         Notes
         -----
-        Since we are clobbering the regular `Markdown` syntax the preprocessor needs to be
-        called with a high priority (100) to be run *before* the regular processing.
+        Since we are clobbering the regular `Markdown` syntax the preprocessor needs to
+        be called with a high priority (100) to be run *before* the regular processing.
         """
         md.preprocessors.register(ImgPreprocessor(md), name="img-tag", priority=100)

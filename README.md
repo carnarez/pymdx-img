@@ -2,12 +2,12 @@
 
 Python-Markdown extension catching the `![]()` semantics to allow... more.
 
-`pip install git+https://github.com/carnarez/pymdx-img` and refer to the brilliant
+`pip install git+https://github.com/carnarez/markdown-img` and refer to the brilliant
 [`Python` implementation](https://github.com/Python-Markdown/markdown).
 
-* **Sizing** is made available via the `?size=...*...` keyword in the alt text. Either
+- **Sizing** is made available via the `?size=...*...` keyword in the alt text. Either
   or both dimensions can be provided in any unit you fancy.
-* **Styling** is made available via the `?class=...` keyword in the alt text. Initially
+- **Styling** is made available via the `?class=...` keyword in the alt text. Initially
   Implemented to allAow image centering, but any CSS class can be provided. One or
   several classes can be provided separated by commas; no spaces!
 
@@ -30,8 +30,8 @@ assert rendered == expected
 
 **Classes:**
 
-* [`ImgPreprocessor`](#markdown_imgimgpreprocessor)
-* [`ImgExtension`](#markdown_imgimgextension)
+- [`ImgPreprocessor`](#markdown_imgimgpreprocessor)
+- [`ImgExtension`](#markdown_imgimgextension)
 
 ## Classes
 
@@ -41,8 +41,8 @@ Preprocessor to catch and replace the `![]()` markers.
 
 **Methods:**
 
-* [`html()`](#markdown_imgimgpreprocessorhtml)
-* [`run()`](#markdown_imgimgpreprocessorrun)
+- [`html()`](#markdown_imgimgpreprocessorhtml)
+- [`run()`](#markdown_imgimgpreprocessorrun)
 
 #### Constructor
 
@@ -54,7 +54,7 @@ All methods inherited, but the `run()` one below.
 
 **Parameters:**
 
-* `md` [`markdown.core.Markdown`]: Internal `Markdown` object to process.
+- `md` \[`markdown.core.Markdown`\]: Internal `Markdown` object to process.
 
 #### Methods
 
@@ -74,15 +74,16 @@ Returned HTML:
 
 **Parameters:**
 
-* `alt` [`str`]: Alt text to add to the image tag in case the file is not available.
-* `src` [`str`]: The path to the image.
-* `cls` [`str`]: Name of the CSS class(es) to provide to the parent `<p>` element.
-* `w` [`str`]: Width of the image. Defaults to `None`.
-* `h` [`str`]: Height of the image. Defaults to `None`.
+- `alt` \[`str`\]: Alt text to add to the image tag in case the file is not available.
+- `src` \[`str`\]: The path to the image.
+- `cls` \[`str`\]: Name of the CSS class(es) to provide to the parent `<p>` element.
+  Defaults to `None`.
+- `w` \[`str`\]: Width of the image. Defaults to `None`.
+- `h` \[`str`\]: Height of the image. Defaults to `None`.
 
 **Returns:**
 
-* [`str`]: HTML elements.
+- \[`str`\]: HTML elements.
 
 **Decoration** via `@staticmethod`.
 
@@ -96,11 +97,11 @@ Overwritten method to process the input `Markdown` lines.
 
 **Paramaters:**
 
-* `lines` [`typing.List[str]`]: `Markdown` content (split by `\n`).
+- `lines` \[`typing.List[str]`\]: `Markdown` content (split by `\n`).
 
 **Returns:**
 
-* [`typing.List[str]`]: Same list of lines, processed.
+- \[`typing.List[str]`\]: Same list of lines, processed.
 
 ### `markdown_img.ImgExtension`
 
@@ -108,7 +109,7 @@ Extension to be imported when calling for the renderer.
 
 **Methods:**
 
-* [`extendMarkdown()`](#markdown_imgimgextensionextendmarkdown)
+- [`extendMarkdown()`](#markdown_imgimgextensionextendmarkdown)
 
 #### Constructor
 
@@ -128,7 +129,7 @@ Overwritten method to process the content.
 
 **Parameters:**
 
-* `md` [`markdown.core.Markdown`]: Internal `Markdown` object to process.
+- `md` \[`markdown.core.Markdown`\]: Internal `Markdown` object to process.
 
 **Notes:**
 
