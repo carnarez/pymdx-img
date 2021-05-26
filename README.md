@@ -1,21 +1,27 @@
-# Module `pymdx_img`
+# Module `markdown_img`
 
-Python-Markdown extension catching the `![]()` semantics to allow image sizing.
-
-This is made via the `?size=...*...` keywords in the `alt` text to avoid breaking common
-renderer behaviour (GitHub included). Either or both dimensions can be provided.
+Python-Markdown extension catching the `![]()` semantics to allow... more.
 
 `pip install git+https://github.com/carnarez/pymdx-img` and refer to the brilliant
 [`Python` implementation](https://github.com/Python-Markdown/markdown).
+
+* **Sizing** is made available via the `?size=...*...` keyword in the alt text. Either
+  or both dimensions can be provided in any unit you fancy.
+* **Styling** is made available via the `?class=...` keyword in the alt text. Initially
+  Implemented to allAow image centering, but any CSS class can be provided. One or
+  several classes can be provided separated by commas; no spaces!
+
+Those keywords are located in the alt text to avoid breaking common renderer behaviour
+(GitHub included).
 
 **Example:**
 
 ```python
 import markdown
-provided = "![Alt text ?size=200px*400px](/wherever/image.png)"
-rendered = markdown.markdown(provided, extensions=[ImgSizingExtension()])
+provided = "![Alt text ?class=align-center ?size=200px*400px](/wherever/image.png)"
+rendered = markdown.markdown(provided, extensions=[ImgExtension()])
 expected = (
-    "<p>"
+    '<p class="align-center">'
     '<img alt="Alt text" src="/wherever/image.png" width="200px" height="400px" />'
     "</p>"
 )
@@ -24,24 +30,24 @@ assert rendered == expected
 
 **Classes:**
 
-* [`ImgSizingPreprocessor`](#pymdx_imgimgsizingpreprocessor)
-* [`ImgSizingExtension`](#pymdx_imgimgsizingextension)
+* [`ImgPreprocessor`](#markdown_imgimgpreprocessor)
+* [`ImgExtension`](#markdown_imgimgextension)
 
 ## Classes
 
-### `pymdx_img.ImgSizingPreprocessor`
+### `markdown_img.ImgPreprocessor`
 
 Preprocessor to catch and replace the `![]()` markers.
 
 **Methods:**
 
-* [`html()`](#pymdx_imgimgsizingpreprocessorhtml)
-* [`run()`](#pymdx_imgimgsizingpreprocessorrun)
+* [`html()`](#markdown_imgimgpreprocessorhtml)
+* [`run()`](#markdown_imgimgpreprocessorrun)
 
 #### Constructor
 
 ```python
-ImgSizingPreprocessor(md: Markdown)
+ImgPreprocessor(md: Markdown)
 ```
 
 All methods inherited, but the `run()` one below.
@@ -52,24 +58,25 @@ All methods inherited, but the `run()` one below.
 
 #### Methods
 
-##### `pymdx_img.ImgSizingPreprocessor.html`
+##### `markdown_img.ImgPreprocessor.html`
 
 ```python
-html(alt: str, src: str, w: str, h: str) -> str:
+html(alt: str, src: str, cls: str, w: str, h: str) -> str:
 ```
 
 Return the HTML block including the parameters.
 
-At the moment, the returned HTML is:
+Returned HTML:
 
 ```html
-<p><img alt="" src="" width="" height="" /></p>
+<p class=""><img alt="" src="" width="" height="" /></p>
 ```
 
 **Parameters:**
 
 * `alt` [`str`]: Alt text to add to the image tag in case the file is not available.
 * `src` [`str`]: The path to the image.
+* `cls` [`str`]: Name of the CSS class(es) to provide to the parent `<p>` element.
 * `w` [`str`]: Width of the image. Defaults to `None`.
 * `h` [`str`]: Height of the image. Defaults to `None`.
 
@@ -79,7 +86,7 @@ At the moment, the returned HTML is:
 
 **Decoration** via `@staticmethod`.
 
-##### `pymdx_img.ImgSizingPreprocessor.run`
+##### `markdown_img.ImgPreprocessor.run`
 
 ```python
 run(lines: typing.List[str]) -> typing.List[str]:
@@ -95,23 +102,23 @@ Overwritten method to process the input `Markdown` lines.
 
 * [`typing.List[str]`]: Same list of lines, processed.
 
-### `pymdx_img.ImgSizingExtension`
+### `markdown_img.ImgExtension`
 
 Extension to be imported when calling for the renderer.
 
 **Methods:**
 
-* [`extendMarkdown()`](#pymdx_imgimgsizingextensionextendmarkdown)
+* [`extendMarkdown()`](#markdown_imgimgextensionextendmarkdown)
 
 #### Constructor
 
 ```python
-ImgSizingExtension()
+ImgExtension()
 ```
 
 #### Methods
 
-##### `pymdx_img.ImgSizingExtension.extendMarkdown`
+##### `markdown_img.ImgExtension.extendMarkdown`
 
 ```python
 extendMarkdown(md: Markdown):
@@ -125,5 +132,5 @@ Overwritten method to process the content.
 
 **Notes:**
 
-Since we are abusing the `Markdown` link syntax the preprocessor needs to be
-called with a high priority.
+Since we are clobbering the regular `Markdown` syntax the preprocessor needs to be
+called with a high priority (100) to be run *before* the regular processing.

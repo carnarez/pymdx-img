@@ -1,19 +1,25 @@
-"""Python-Markdown extension catching the `![]()` semantics to allow image sizing.
-
-This is made via the `?size=...*...` keywords in the `alt` text to avoid breaking common
-renderer behaviour (GitHub included). Either or both dimensions can be provided.
+"""Python-Markdown extension catching the `![]()` semantics to allow... more.
 
 `pip install git+https://github.com/carnarez/pymdx-img` and refer to the brilliant
 [`Python` implementation](https://github.com/Python-Markdown/markdown).
+
+* **Sizing** is made available via the `?size=...*...` keyword in the alt text. Either
+  or both dimensions can be provided in any unit you fancy.
+* **Styling** is made available via the `?class=...` keyword in the alt text. Initially
+  Implemented to allAow image centering, but any CSS class can be provided. One or
+  several classes can be provided separated by commas; no spaces!
+
+Those keywords are located in the alt text to avoid breaking common renderer behaviour
+(GitHub included).
 
 Example
 -------
 ```python
 import markdown
-provided = "![Alt text ?size=200px*400px](/wherever/image.png)"
-rendered = markdown.markdown(provided, extensions=[ImgSizingExtension()])
+provided = "![Alt text ?class=align-center ?size=200px*400px](/wherever/image.png)"
+rendered = markdown.markdown(provided, extensions=[ImgExtension()])
 expected = (
-    "<p>"
+    '<p class="align-center">'
     '<img alt="Alt text" src="/wherever/image.png" width="200px" height="400px" />'
     "</p>"
 )
@@ -29,7 +35,7 @@ from markdown.extensions import Extension
 from markdown.preprocessors import Preprocessor
 
 
-class ImgSizingPreprocessor(Preprocessor):
+class ImgPreprocessor(Preprocessor):
     """Preprocessor to catch and replace the `![]()` markers."""
 
     def __init__(self, md: Markdown):
@@ -43,13 +49,13 @@ class ImgSizingPreprocessor(Preprocessor):
         super().__init__(md)
 
     @staticmethod
-    def html(alt: str, src: str, w: str = None, h: str = None) -> str:
+    def html(alt: str, src: str, cls: str = [], w: str = None, h: str = None) -> str:
         """Return the HTML block including the parameters.
 
-        At the moment, the returned HTML is:
+        Returned HTML:
 
         ```html
-        <p><img alt="" src="" width="" height="" /></p>
+        <p class=""><img alt="" src="" width="" height="" /></p>
         ```
 
         Parameters
@@ -58,6 +64,8 @@ class ImgSizingPreprocessor(Preprocessor):
             Alt text to add to the image tag in case the file is not available.
         src : str
             The path to the image.
+        cls : str
+            Name of the CSS class(es) to provide to the parent `<p>` element.
         w : str
             Width of the image. Defaults to `None`.
         h : str
@@ -70,13 +78,19 @@ class ImgSizingPreprocessor(Preprocessor):
         """
         dimensions = ""
 
+        if cls:
+            css = f' class="{" ".join(cls)}"'
+
+        if w is not None:
+            dimensions += f'width="{w}" '
+
         if w is not None:
             dimensions += f'width="{w}" '
 
         if h is not None:
             dimensions += f'height="{h}" '
 
-        return f'<p><img alt="{alt}" src="{src}" {dimensions}/></p>'
+        return f'<p{css}><img alt="{alt}" src="{src}" {dimensions}/></p>'
 
     def run(self, lines: typing.List[str]) -> typing.List[str]:
         r"""Overwritten method to process the input `Markdown` lines.
@@ -91,6 +105,7 @@ class ImgSizingPreprocessor(Preprocessor):
         : typing.List[str]
             Same list of lines, processed.
         """
+        cls = None
         w = None
         h = None
 
@@ -98,19 +113,28 @@ class ImgSizingPreprocessor(Preprocessor):
             for decl in re.findall(r"(!\[.*?\]\(.+?\))", line):
                 alt, src = re.match(r"!\[(.*)\]\((.*)\)", decl).groups()
 
-                m = re.search(r"\?size=(.*)\*(.*)", alt)
+                # sizing
+                m = re.search(r"\?size=(.*)\*([^\s\?]*)", alt)
                 if m is not None:
                     w = m.group(1) or None
                     h = m.group(2) or None
 
-                alt = re.sub(r"\?size=.*\*.*", "", alt).strip()
+                alt = re.sub(r"\?size=[^\s]*\*[^\s\?]*", "", alt).strip()
 
-                lines[i] = line.replace(decl, self.html(alt, src, w, h))
+                # styling
+                m = re.search(r"\?class=([^\s\?]+)", alt)
+                if m is not None:
+                    cls = m.group(1).split(",") or []
+
+                alt = re.sub(r"\?class=[^\s\?]+", "", alt).strip()
+
+                # reprocessed line
+                lines[i] = line.replace(decl, self.html(alt, src, cls, w, h))
 
         return lines
 
 
-class ImgSizingExtension(Extension):
+class ImgExtension(Extension):
     """Extension to be imported when calling for the renderer."""
 
     def extendMarkdown(self, md: Markdown):
@@ -123,9 +147,7 @@ class ImgSizingExtension(Extension):
 
         Notes
         -----
-        Since we are abusing the `Markdown` link syntax the preprocessor needs to be
-        called with a high priority.
+        Since we are clobbering the regular `Markdown` syntax the preprocessor needs to be
+        called with a high priority (100) to be run *before* the regular processing.
         """
-        md.preprocessors.register(
-            ImgSizingPreprocessor(md), name="img-tag", priority=100
-        )
+        md.preprocessors.register(ImgPreprocessor(md), name="img-tag", priority=100)
