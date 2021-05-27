@@ -111,26 +111,26 @@ class ImgPreprocessor(Preprocessor):
         h = None
 
         for i, line in enumerate(lines):
-            for decl in re.findall(r"(!\[.*?\]\(.+?\))", line):
-                alt, src = re.match(r"!\[(.*)\]\((.*)\)", decl).groups()
+            for m in re.finditer(r"!\[(.*?)\]\((.+?)\)", line):
+                alt, src = m.groups()
 
                 # sizing
-                m = re.search(r"\?size=(.*)\*([^\s\?]*)", alt)
-                if m is not None:
-                    w = m.group(1) or None
-                    h = m.group(2) or None
+                m_ = re.search(r"\?size=(.*)\*([^\s\?]*)", alt)
+                if m_ is not None:
+                    w = m_.group(1) or None
+                    h = m_.group(2) or None
 
                 alt = re.sub(r"\?size=[^\s]*\*[^\s\?]*", "", alt).strip()
 
                 # styling
-                m = re.search(r"\?class=([^\s\?]+)", alt)
-                if m is not None:
-                    cls = m.group(1).split(",") or []
+                m_ = re.search(r"\?class=([^\s\?]+)", alt)
+                if m_ is not None:
+                    cls = m_.group(1).split(",") or []
 
                 alt = re.sub(r"\?class=[^\s\?]+", "", alt).strip()
 
                 # reprocessed line
-                lines[i] = line.replace(decl, self.html(alt, src, cls, w, h))
+                lines[i] = line.replace(m.group(0), self.html(alt, src, cls, w, h))
 
         return lines
 
