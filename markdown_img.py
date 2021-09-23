@@ -6,7 +6,7 @@
 * **Sizing** is made available via the `?size=...*...` keyword in the alt text. Either
   or both dimensions can be provided in any unit you fancy.
 * **Styling** is made available via the `?class=...` keyword in the alt text. Initially
-  Implemented to allAow image centering, but any CSS class can be provided. One or
+  Implemented to allow image centering, but any CSS class can be provided. One or
   several classes can be provided separated by commas; no spaces!
 
 Those keywords are located in the alt text to avoid breaking common renderer behaviour
