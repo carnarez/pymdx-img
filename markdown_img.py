@@ -81,9 +81,8 @@ class ImgPreprocessor(Preprocessor):
 
         if cls:
             css = f' class="{" ".join(cls)}"'
-
-        if w is not None:
-            dimensions += f'width="{w}" '
+        else:
+            css = ""
 
         if w is not None:
             dimensions += f'width="{w}" '
@@ -106,31 +105,41 @@ class ImgPreprocessor(Preprocessor):
         : typing.List[str]
             Same list of lines, processed.
         """
+        escaped = 0
+
         cls = None
         w = None
         h = None
 
         for i, line in enumerate(lines):
-            for m in re.finditer(r"!\[(.*?)\]\((.+?)\)", line):
-                alt, src = m.groups()
 
-                # sizing
-                m_ = re.search(r"\?size=(.*)\*([^\s\?]*)", alt)
-                if m_ is not None:
-                    w = m_.group(1) or None
-                    h = m_.group(2) or None
+            if line.startswith("```"):
+                escaped = line.count("`")
 
-                alt = re.sub(r"\?size=[^\s]*\*[^\s\?]*", "", alt).strip()
+            if escaped and line == escaped * "`":
+                escaped = 0
 
-                # styling
-                m_ = re.search(r"\?class=([^\s\?]+)", alt)
-                if m_ is not None:
-                    cls = m_.group(1).split(",") or []
+            if not escaped:
+                for m in re.finditer(r"!\[(.*?)\]\((.+?)\)", line):
+                    alt, src = m.groups()
 
-                alt = re.sub(r"\?class=[^\s\?]+", "", alt).strip()
+                    # sizing
+                    m_ = re.search(r"\?size=(.*)\*([^\s\?]*)", alt)
+                    if m_ is not None:
+                        w = m_.group(1) or None
+                        h = m_.group(2) or None
 
-                # reprocessed line
-                lines[i] = line.replace(m.group(0), self.html(alt, src, cls, w, h))
+                    alt = re.sub(r"\?size=[^\s]*\*[^\s\?]*", "", alt).strip()
+
+                    # styling
+                    m_ = re.search(r"\?class=([^\s\?]+)", alt)
+                    if m_ is not None:
+                        cls = m_.group(1).split(",") or []
+
+                    alt = re.sub(r"\?class=[^\s\?]+", "", alt).strip()
+
+                    # reprocessed line
+                    lines[i] = line.replace(m.group(0), self.html(alt, src, cls, w, h))
 
         return lines
 
