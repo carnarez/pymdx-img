@@ -81,9 +81,8 @@ class ImgPreprocessor(Preprocessor):
 
         if cls:
             css = f' class="{" ".join(cls)}"'
-
-        if w is not None:
-            dimensions += f'width="{w}" '
+        else:
+            css = ""
 
         if w is not None:
             dimensions += f'width="{w}" '
