@@ -61,7 +61,7 @@ All methods inherited, but the `run()` one below.
 ##### `markdown_img.ImgPreprocessor.html`
 
 ```python
-html(alt: str, src: str, cls: str, w: str, h: str) -> str:
+html(alt: str, src: str, cls: typing.List[str], w: str, h: str) -> str:
 ```
 
 Return the HTML block including the parameters.
@@ -76,8 +76,8 @@ Returned HTML:
 
 - `alt` \[`str`\]: Alt text to add to the image tag in case the file is not available.
 - `src` \[`str`\]: The path to the image.
-- `cls` \[`str`\]: Name of the CSS class(es) to provide to the parent `<p>` element.
-  Defaults to `None`.
+- `cls` \[`typing.List[str]`\]: List of the CSS class(es) to provide to the parent `<p>`
+  element. Defaults to an empty list.
 - `w` \[`str`\]: Width of the image. Defaults to `None`.
 - `h` \[`str`\]: Height of the image. Defaults to `None`.
 
@@ -95,7 +95,7 @@ run(lines: typing.List[str]) -> typing.List[str]:
 
 Overwritten method to process the input `Markdown` lines.
 
-**Paramaters:**
+**Parameters:**
 
 - `lines` \[`typing.List[str]`\]: `Markdown` content (split by `\n`).
 
