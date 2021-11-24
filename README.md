@@ -30,8 +30,10 @@ assert rendered == expected
 
 **Classes:**
 
-- [`ImgPreprocessor`](#markdown_imgimgpreprocessor)
-- [`ImgExtension`](#markdown_imgimgextension)
+- [`ImgPreprocessor`](#markdown_imgimgpreprocessor): Preprocessor to catch and replace
+  the `![]()` markers.
+- [`ImgExtension`](#markdown_imgimgextension): Extension to be imported when calling for
+  the renderer.
 
 ## Classes
 
@@ -41,8 +43,10 @@ Preprocessor to catch and replace the `![]()` markers.
 
 **Methods:**
 
-- [`html()`](#markdown_imgimgpreprocessorhtml)
-- [`run()`](#markdown_imgimgpreprocessorrun)
+- [`html()`](#markdown_imgimgpreprocessorhtml): Return the HTML block including the
+  parameters.
+- [`run()`](#markdown_imgimgpreprocessorrun): Overwritten method to process the input
+  `Markdown` lines.
 
 #### Constructor
 
@@ -109,7 +113,8 @@ Extension to be imported when calling for the renderer.
 
 **Methods:**
 
-- [`extendMarkdown()`](#markdown_imgimgextensionextendmarkdown)
+- [`extendMarkdown()`](#markdown_imgimgextensionextendmarkdown): Overwritten method to
+  process the content.
 
 #### Constructor
 
