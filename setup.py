@@ -4,11 +4,11 @@ import setuptools  # type: ignore
 
 setuptools.setup(
     author="carnarez",
-    description="Add support for image sizing and centering to Python-Markdown.",
+    description="Add support for image sizing and class-tagging to Python-Markdown.",
     install_requires=["markdown"],
     name="markdown-img",
-    package_data={"": ["*.pyi"]},
-    py_modules=["markdown_img"],
+    packages=["markdown_img"],
+    package_data={"markdown_img": ["*.pyi", "py.typed"]},
     url="https://github.com/carnarez/markdown-img",
     version="0.0.1",
 )
