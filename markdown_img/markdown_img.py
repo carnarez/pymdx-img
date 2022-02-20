@@ -28,7 +28,6 @@ assert rendered == expected
 """
 
 import re
-import typing
 
 from markdown.core import Markdown
 from markdown.extensions import Extension
@@ -109,7 +108,7 @@ class ImgPreprocessor(Preprocessor):
         """
         escaped = 0
 
-        cls: list[str | typing.Any] = []
+        cls: list[str] = []
         w = None
         h = None
 
