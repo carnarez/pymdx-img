@@ -8,7 +8,7 @@ setuptools.setup(
     install_requires=["markdown"],
     name="markdown-img",
     packages=["markdown_img"],
-    package_data={"markdown_img": ["*.pyi", "py.typed"]},
+    package_data={"markdown_img": ["py.typed"]},
     url="https://github.com/carnarez/markdown-img",
     version="0.0.1",
 )

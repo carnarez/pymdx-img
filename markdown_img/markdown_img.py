@@ -50,7 +50,7 @@ class ImgPreprocessor(Preprocessor):
 
     @staticmethod
     def html(
-        alt: str, src: str, cls: typing.List[str] = [], w: str = None, h: str = None
+        alt: str, src: str, cls: list[str] = [], w: str = None, h: str = None
     ) -> str:
         """Return the HTML block including the parameters.
 
@@ -66,7 +66,7 @@ class ImgPreprocessor(Preprocessor):
             Alt text to add to the image tag in case the file is not available.
         src : str
             The path to the image.
-        cls : typing.List[str]
+        cls : list[str]
             List of the CSS class(es) to provide to the parent `<p>` element. Defaults
             to an empty list.
         w : str
@@ -94,22 +94,22 @@ class ImgPreprocessor(Preprocessor):
 
         return f'<p{css}><img alt="{alt}" src="{src}" {dimensions}/></p>'
 
-    def run(self, lines: typing.List[str]) -> typing.List[str]:
+    def run(self, lines: list[str]) -> list[str]:
         r"""Overwritten method to process the input `Markdown` lines.
 
         Parameters
         ----------
-        lines : typing.List[str]
+        lines : list[str]
             `Markdown` content (split by `\n`).
 
         Returns
         -------
-        : typing.List[str]
+        : list[str]
             Same list of lines, processed.
         """
         escaped = 0
 
-        cls = []
+        cls: list[str | typing.Any] = []
         w = None
         h = None
 
