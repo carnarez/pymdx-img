@@ -1,6 +1,6 @@
 """Make `markdown-img` installable (via `pip install git+https://...`)."""
 
-import setuptools  # type: ignore
+import setuptools
 
 setuptools.setup(
     author="carnarez",
