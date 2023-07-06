@@ -14,7 +14,7 @@ Python-Markdown extension catching the `![]()` semantics to allow... more.
 Those keywords are located in the alt text to avoid breaking common renderer behaviour
 (GitHub included).
 
-**Example:**
+## Example:
 
 ```python
 import markdown
@@ -28,7 +28,7 @@ expected = (
 assert rendered == expected
 ```
 
-**Classes:**
+**Classes**
 
 - [`ImgPreprocessor`](#markdown_imgimgpreprocessor): Preprocessor to catch and replace
   the `![]()` markers.
@@ -41,7 +41,7 @@ assert rendered == expected
 
 Preprocessor to catch and replace the `![]()` markers.
 
-**Methods:**
+**Methods**
 
 - [`html()`](#markdown_imgimgpreprocessorhtml): Return the HTML block including the
   parameters.
@@ -56,7 +56,7 @@ ImgPreprocessor(md: Markdown)
 
 All methods inherited, but the `run()` one below.
 
-**Parameters:**
+**Parameters**
 
 - `md` \[`markdown.core.Markdown`\]: Internal `Markdown` object to process.
 
@@ -65,7 +65,13 @@ All methods inherited, but the `run()` one below.
 ##### `markdown_img.ImgPreprocessor.html`
 
 ```python
-html(alt: str, src: str, cls: typing.List[str], w: str, h: str) -> str:
+html(
+    alt: str,
+    src: str,
+    cls: list[str] | None = None,
+    w: str | None = None,
+    h: str | None = None,
+) -> str:
 ```
 
 Return the HTML block including the parameters.
@@ -76,16 +82,16 @@ Returned HTML:
 <p class=""><img alt="" src="" width="" height="" /></p>
 ```
 
-**Parameters:**
+**Parameters**
 
 - `alt` \[`str`\]: Alt text to add to the image tag in case the file is not available.
 - `src` \[`str`\]: The path to the image.
-- `cls` \[`typing.List[str]`\]: List of the CSS class(es) to provide to the parent `<p>`
-  element. Defaults to an empty list.
+- `cls` \[`list[str] | None`\]: List of the CSS class(es) to provide to the parent `<p>`
+  element. Defaults to `None`.
 - `w` \[`str`\]: Width of the image. Defaults to `None`.
 - `h` \[`str`\]: Height of the image. Defaults to `None`.
 
-**Returns:**
+**Returns**
 
 - \[`str`\]: HTML elements.
 
@@ -94,24 +100,24 @@ Returned HTML:
 ##### `markdown_img.ImgPreprocessor.run`
 
 ```python
-run(lines: typing.List[str]) -> typing.List[str]:
+run(lines: list[str]) -> list[str]:
 ```
 
 Overwritten method to process the input `Markdown` lines.
 
-**Parameters:**
+**Parameters**
 
-- `lines` \[`typing.List[str]`\]: `Markdown` content (split by `\n`).
+- `lines` \[`list[str]`\]: `Markdown` content (split by `\n`).
 
-**Returns:**
+**Returns**
 
-- \[`typing.List[str]`\]: Same list of lines, processed.
+- \[`list[str]`\]: Same list of lines, processed.
 
 ### `markdown_img.ImgExtension`
 
 Extension to be imported when calling for the renderer.
 
-**Methods:**
+**Methods**
 
 - [`extendMarkdown()`](#markdown_imgimgextensionextendmarkdown): Overwritten method to
   process the content.
@@ -127,16 +133,16 @@ ImgExtension()
 ##### `markdown_img.ImgExtension.extendMarkdown`
 
 ```python
-extendMarkdown(md: Markdown):
+extendMarkdown(md: Markdown) -> None:
 ```
 
 Overwritten method to process the content.
 
-**Parameters:**
+**Parameters**
 
 - `md` \[`markdown.core.Markdown`\]: Internal `Markdown` object to process.
 
-**Notes:**
+**Notes**
 
 Since we are clobbering the regular `Markdown` syntax the preprocessor needs to be
 called with a high priority (100) to be run *before* the regular processing.

@@ -12,7 +12,7 @@
 Those keywords are located in the alt text to avoid breaking common renderer behaviour
 (GitHub included).
 
-Example
+Example:
 -------
 ```python
 import markdown
@@ -25,6 +25,7 @@ expected = (
 )
 assert rendered == expected
 ```
+
 """
 
 import re
@@ -37,7 +38,7 @@ from markdown.preprocessors import Preprocessor
 class ImgPreprocessor(Preprocessor):
     """Preprocessor to catch and replace the `![]()` markers."""
 
-    def __init__(self, md: Markdown):
+    def __init__(self, md: Markdown) -> None:
         """All methods inherited, but the `run()` one below.
 
         Parameters
@@ -49,7 +50,11 @@ class ImgPreprocessor(Preprocessor):
 
     @staticmethod
     def html(
-        alt: str, src: str, cls: list[str] = [], w: str = None, h: str = None
+        alt: str,
+        src: str,
+        cls: list[str] | None = None,
+        w: str | None = None,
+        h: str | None = None,
     ) -> str:
         """Return the HTML block including the parameters.
 
@@ -65,9 +70,9 @@ class ImgPreprocessor(Preprocessor):
             Alt text to add to the image tag in case the file is not available.
         src : str
             The path to the image.
-        cls : list[str]
+        cls : list[str] | None
             List of the CSS class(es) to provide to the parent `<p>` element. Defaults
-            to an empty list.
+            to `None`.
         w : str
             Width of the image. Defaults to `None`.
         h : str
@@ -80,10 +85,7 @@ class ImgPreprocessor(Preprocessor):
         """
         dimensions = ""
 
-        if cls:
-            css = f' class="{" ".join(cls)}"'
-        else:
-            css = ""
+        css = "" if cls is None else f' class="{" ".join(cls)}"'
 
         if w is not None:
             dimensions += f'width="{w}" '
@@ -113,7 +115,6 @@ class ImgPreprocessor(Preprocessor):
         h = None
 
         for i, line in enumerate(lines):
-
             if line.startswith("```"):
                 escaped = line.count("`")
 
@@ -148,7 +149,7 @@ class ImgPreprocessor(Preprocessor):
 class ImgExtension(Extension):
     """Extension to be imported when calling for the renderer."""
 
-    def extendMarkdown(self, md: Markdown):
+    def extendMarkdown(self, md: Markdown) -> None:
         """Overwritten method to process the content.
 
         Parameters
