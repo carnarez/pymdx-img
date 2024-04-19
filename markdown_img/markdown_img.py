@@ -45,6 +45,7 @@ class ImgPreprocessor(Preprocessor):
         ----------
         md : markdown.core.Markdown
             Internal `Markdown` object to process.
+
         """
         super().__init__(md)
 
@@ -82,6 +83,7 @@ class ImgPreprocessor(Preprocessor):
         -------
         : str
             HTML elements.
+
         """
         dimensions = ""
 
@@ -107,6 +109,7 @@ class ImgPreprocessor(Preprocessor):
         -------
         : list[str]
             Same list of lines, processed.
+
         """
         escaped = 0
 
@@ -161,5 +164,6 @@ class ImgExtension(Extension):
         -----
         Since we are clobbering the regular `Markdown` syntax the preprocessor needs to
         be called with a high priority (100) to be run *before* the regular processing.
+
         """
         md.preprocessors.register(ImgPreprocessor(md), name="img-tag", priority=100)
